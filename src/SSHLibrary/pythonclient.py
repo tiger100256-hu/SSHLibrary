@@ -269,7 +269,7 @@ class PythonSSHClient(AbstractSSHClient):
 
         if forward_agent:
             paramiko.agent.AgentRequestHandler(new_shell)
-            
+
         cmd.run_in(new_shell, sudo, sudo_password, invoke_subsystem)
         return cmd
 
@@ -473,12 +473,12 @@ class RemoteCommand(AbstractCommand):
         if self._shell.recv_ready():
             stdout_output = stdout_filebuffer.read(len(self._shell.in_buffer))
             if is_truthy(output_during_execution):
-                logger.console(stdout_output)
+                logger.console(stdout_output.decode("utf-8"), False)
             stdouts.append(stdout_output)
         if self._shell.recv_stderr_ready():
             stderr_output = stderr_filebuffer.read(len(self._shell.in_stderr_buffer))
             if is_truthy(output_during_execution):
-                logger.console(stderr_output)
+                logger.console(stderr_output.decode("utf-8"), False)
             stderrs.append(stderr_output)
 
     def _shell_open(self):
@@ -499,3 +499,4 @@ class RemoteCommand(AbstractCommand):
 
     def _invoke(self):
         self._shell.invoke_subsystem(self._command)
+
